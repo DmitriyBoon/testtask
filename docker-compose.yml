@@ -1,0 +1,28 @@
+version: '2'
+services:
+   proxy:
+     build: ./nginx1
+     container_name: proxy
+     volumes: 
+       - /var/log/nginx:/var/log/nginx
+     networks:
+       mynet:
+         ipv4_address: 172.20.0.2
+     ports:
+         - "8888:8888"
+     tty: true
+   web:
+     container_name: web
+     build: ./nginx2
+     networks:
+       mynet:
+         ipv4_address: 172.20.0.3
+     depends_on:
+       - proxy
+     tty: true
+networks:
+   mynet:
+     driver: bridge
+     ipam:
+       config:
+         - subnet: 172.20.0.0/16
